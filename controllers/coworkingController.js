@@ -11,8 +11,7 @@ exports.findAllCoworkings = (req, res) => {
     && (criterium === 'superficy' || criterium === 'capacity')) 
     {
         arrToSort.sort((a, b) => {
-            return orderBy === 'DESC' ? 
-            b[criterium] - a[criterium] : a[criterium] - b[criterium]
+            return orderBy === 'DESC' ? b[criterium] - a[criterium] : a[criterium] - b[criterium]
         })
     }
     res.json({ message: 
@@ -21,7 +20,7 @@ exports.findAllCoworkings = (req, res) => {
         })
 };
 
-exports.findCoworkingByPk = (res, req)=>{
+exports.findCoworkingByPk = (req, res)=>{
     /*Old Ver
 //console.log(parseInt(req.params.id), mockCoworkings[0].name);
         // :request-element => req.params.resquest-element
@@ -47,10 +46,9 @@ exports.findCoworkingByPk = (res, req)=>{
     
     targetCoworking ? (res.json({  
         Message: `Info du coworking N°${targetCoworking.id} récupéré`, data:targetCoworking
-    })) : (
-        res.json({message:
-            `Le coworking N°${req.params.id} n'existe pas.`
-    }));
+    })) : ( 
+        res.json({message: `Le coworking N°${req.params.id} n'existe pas.`
+        }));
 };
 
 exports.createCoworking = (req, res) =>{
@@ -61,9 +59,8 @@ exports.createCoworking = (req, res) =>{
     // Insert Data object Info
     mockCoworkings.push(newCoworking)
     return res.json({ message: 
-        `Un nouveau coworking n°${newCoworking.id} a été créé.`,
-        data: newCoworking 
-    });
+       `Un nouveau coworking n°${newCoworking.id} a été créé.`,
+       data: newCoworking });
 }
 
 exports.updateCoworking = (req, res) =>{
@@ -76,8 +73,8 @@ exports.updateCoworking = (req, res) =>{
     mockCoworkings[indexIntArray] = updatedCoworking;
     // Check Id & Update
     if(indexIntArray !== -1){
-        return res.json({message: 
-            `le coworking N°${updatedCoworking.id} : ${updatedCoworking.name} a été modifié`,
+        return res.json({message: `le coworking N°${updatedCoworking.id} :
+        ${updatedCoworking.name} a été modifié`,
             data:updatedCoworking
         });
     } else{
@@ -87,7 +84,7 @@ exports.updateCoworking = (req, res) =>{
     }
 };
 
-exports.deleteCoworking = (res, req) =>{
+exports.deleteCoworking = (req, res) =>{
     // Check Id & Storage Old Object Info
     const indexIntArray = mockCoworkings.findIndex((element) =>{
         return  element.id === parseInt(req.params.id)
@@ -104,7 +101,8 @@ exports.deleteCoworking = (res, req) =>{
     // Check & Delete Queries demand
     if(indexIntArray === -1){
         return res.json({
-            message: `Le coworking N°${req.params.id} n'existe pas ou a déjà été supprimé`});
+            message: 
+            `Le coworking N°${req.params.id} n'existe pas ou a déjà été supprimé`});
     } else {
         let deletedCoworkings = {...mockCoworkings[indexIntArray], ...req.body};
         mockCoworkings.splice(indexIntArray, 1);

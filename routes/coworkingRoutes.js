@@ -1,7 +1,7 @@
 // Routes Coworking Files
 const express = require('express')
 const router = express.Router()
-const coworkingController = require('../controllers/coworkingControllers');
+const coworkingController = require('../controllers/coworkingController');
 
 // Queries
 router

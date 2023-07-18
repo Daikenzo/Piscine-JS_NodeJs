@@ -1,6 +1,6 @@
 // Sequelize Init
 const { Sequelize, DataTypes } = require('sequelize');
-const mockCoworkings = require('../src/lib/mock-coworkings');
+const mockCoworkings = require('./mock-coworkings');
 
 // Connect & Authificate DataBase
 const sequelize = new Sequelize('coworking_07_2023', 'root', '', {
@@ -16,10 +16,10 @@ sequelize.authenticate()
 // sequelize.sync()
 
 // Table define
-const getUserModel = require('./models/userModel')
+const getUserModel = require('../models/userModel')
 const UserModel = getUserModel(sequelize, DataTypes);
 
-const getCoworkingModel = require('./models/coworkingModel');
+const getCoworkingModel = require('../models/coworkingModel');
 const CoworkingModel = getCoworkingModel(sequelize, DataTypes);
 
 // sequelize Init Insert Value

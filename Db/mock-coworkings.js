@@ -43,8 +43,8 @@ const coworkings = [
         "id": 14,
         "name": "Start-Way",
         "price": { "hour": 6, "day": 36, "month": null },
-        address: { "number": "39", "street": "rue du Château d'Eau", "postCode": 33000, "city": "Bordeaux" },
-        picture: "",
+        "address": { "number": "39", "street": "rue du Château d'Eau", "postCode": 33000, "city": "Bordeaux" },
+        "picture": "",
         "superficy": 300,
         "capacity": 253,
         "created": new Date()
@@ -111,4 +111,4 @@ const coworkings = [
     }
 ];
 
-module.exports = coworkings
+module.exports = coworkings;

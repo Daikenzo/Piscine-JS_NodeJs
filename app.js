@@ -5,10 +5,10 @@ const express = require('express');
 const morgan = require('morgan');
 const sequelize = require('./db/sequelize');
 const app = express();
-const port = 3300;
+const port = 3000;
 
 // sequelize Init
-sequelize.initDb();
+//sequelize.initDb();
 
 // Call app
 app.use(express.json());
