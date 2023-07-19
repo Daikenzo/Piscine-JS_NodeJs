@@ -3,3 +3,5 @@
 // pour les tableaux
 
 // rest operator (danger confusion)
+
+// Promesse

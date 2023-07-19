@@ -51,5 +51,5 @@ const initDb = () =>{
 }
 
 module.exports = {
-    initDb
+    initDb, CoworkingModel
 }

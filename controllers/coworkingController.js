@@ -1,5 +1,6 @@
 // Coworking Controllers
 const mockCoworkings = require('../db/mock-coworkings');
+const {CoworkingModel} = require('../db/sequelize');
 
 exports.findAllCoworkings = (req, res) => {
     const criterium = req.query.criterium ? req.query.criterium : 'superficy'
@@ -52,15 +53,35 @@ exports.findCoworkingByPk = (req, res)=>{
 };
 
 exports.createCoworking = (req, res) =>{
+    /*Old
     // Create New Item with increment id
     // on ajoute à un nouvel objet {} un id unique, en l'occurrence égal au dernier id du mock-coworkings auquel on ajoute 1
     const newId = mockCoworkings[mockCoworkings.length - 1].id + 1
     const newCoworking = { id: newId, ...req.body }
     // Insert Data object Info
-    mockCoworkings.push(newCoworking)
-    return res.json({ message: 
-       `Un nouveau coworking n°${newCoworking.id} a été créé.`,
-       data: newCoworking });
+    mockCoworkings.push(newCoworking)*/
+
+    const newCoworking = {...req.body };
+    // Insert Req body
+    CoworkingModel
+        .create({
+            "name":newCoworking.name,
+            "price":newCoworking.price,
+            "address":newCoworking.address,
+            "supercify":newCoworking.superficy,
+            "capacity":newCoworking.capacity,
+            })
+        .then((coworking) =>{
+            res.json({ message: 
+                `Un nouveau coworking ${newCoworking.name} a été créé.`,
+                data: coworking });
+        })
+        .catch((error) =>{
+            res.json({  message:
+            `Une erreur est survenue: ${error}`});
+        })
+
+    
 }
 
 exports.updateCoworking = (req, res) =>{

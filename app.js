@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 
 // sequelize Init
-//sequelize.initDb();
+sequelize.initDb();
 
 // Call app
 app.use(express.json());
