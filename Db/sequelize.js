@@ -16,23 +16,23 @@ sequelize.authenticate()
 // sequelize.sync()
 
 // Table define
-const getUserModel = require('../models/userModel')
-const UserModel = getUserModel(sequelize, DataTypes);
+// const getUserModel = require('../models/userModel')
+// const UserModel = getUserModel(sequelize, DataTypes);
 
 const getCoworkingModel = require('../models/coworkingModel');
 const CoworkingModel = getCoworkingModel(sequelize, DataTypes);
 
 // sequelize Init Insert Value
 const initDb = () =>{
-    sequelize   //Users
-        .sync({ force: true})
-        .then(() =>{
-            UserModel.create({
-                username: 'jane',
-                firstname: 'doe',
-                birthday: new Date('september 22, 2018 15:00:00')
-        });
-    });
+    // sequelize   //Users
+    //     .sync({ force: true})
+    //     .then(() =>{
+    //         UserModel.create({
+    //             username: 'jane',
+    //             firstname: 'doe',
+    //             birthday: new Date('september 22, 2018 15:00:00')
+    //     });
+    // });
     sequelize //Coworking
         .sync({ force: true})
         .then(() =>{
@@ -41,7 +41,7 @@ const initDb = () =>{
                    "name":coworking.name,
                    "price":coworking.price,
                    "address":coworking.address,
-                   "supercify":coworking.superficy,
+                   "superficy":coworking.superficy,
                    "capacity":coworking.capacity,
                    "picture":coworking.picture,
                    "created":new Date()

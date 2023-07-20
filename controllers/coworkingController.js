@@ -1,4 +1,5 @@
 // Coworking Controllers
+const { InstanceError, UniqueConstraintError, ValidationError } = require('sequelize');
 const {CoworkingModel} = require('../db/sequelize');
 
 exports.findAllCoworkings = (req, res) => {
@@ -15,7 +16,7 @@ exports.findAllCoworkings = (req, res) => {
             });
     })
     .catch((error)=>{
-        res.json({ message: 
+        res.status(500).json({ message: 
             `Une Erreur est survenue: ${error}`
             });
     });
@@ -64,13 +65,13 @@ exports.findCoworkingByPk = (req, res)=>{
         .findByPk(req.params.id)
         .then(targetCoworking =>{
             if(!targetCoworking){
-                res.json({message: `Le coworking N°${req.params.id} n'existe pas.`});
+                res.status(400).json({message: `Le coworking N°${req.params.id} n'existe pas.`});
             } else{
                 res.json({message: `Le coworking N°${req.params.id} a bien été récupéré`, data:targetCoworking});
             }
         })
         .catch((error =>{
-            res.json({message: `Une erreur est survenue: ${error}`});
+            res.json.status(500).json({message: `Une erreur est survenue: ${error}`});
         }));
 };
 
@@ -90,17 +91,24 @@ exports.createCoworking = (req, res) =>{
             "name":newCoworking.name,
             "price":newCoworking.price,
             "address":newCoworking.address,
-            "supercify":newCoworking.superficy,
+            "superficy":newCoworking.superficy,
             "capacity":newCoworking.capacity,
             })
         .then((coworking) =>{
-            res.json({ message: 
+            res.status(201).json({ message: 
                 `Un nouveau coworking N°${coworking.id}: ${coworking.name}} a été créé.`,
                 data: coworking }); // coworking => result
         })
-        .catch((error) =>{
-            res.json({  message:
-            `Une erreur est survenue: ${error}`});
+        .catch((error) => {
+            
+            if (error.name === "SequelizeUniqueConstraintError" || error instanceof UniqueConstraintError){
+                //console.log(error.name)
+                return res.status(400).json({ message: `Le nom est déjà pris`, type:error.name})
+            } 
+            if ( error instanceof ValidationError) {
+                return res.status(400).json({ message: error.message })
+            } 
+            res.status(500).json({ message: `Une erreur est survenue :  ${error}` })
         })
 
     
@@ -125,7 +133,7 @@ exports.updateCoworking = (req, res) =>{
             };
         })
         .catch((error)=>{
-            res.json({message:
+            res.status(500).json({message:
                 `Une Erreur est survenue: ${error}`
             });
         });
@@ -140,7 +148,7 @@ exports.deleteCoworking = (req, res) =>{
     CoworkingModel
         .findByPk(req.params.id)
         .then(result =>{ // Check & Delete From Database
-            if (!result){   return res.json(
+            if (!result){   return res.status(400).json(
                 {message:
                     `Le coworking N°${req.params.id} n'existe pas ou a déjà été supprimé`
                 });
@@ -152,14 +160,14 @@ exports.deleteCoworking = (req, res) =>{
                         }
                     })
                     .then(()=>{
-                        res.json({ // Coworking Deleted
+                        res.status(200).json({ // Coworking Deleted
                             message: `Le coworking N°${result.dataValues.id}: ${result.dataValues.name} a été suprimé`, data:result
                         });
                     });
             };
         })
         .catch((error) =>{
-            res.json({ message: 
+            res.status(500).json({ message: 
                 `Une erreur est survenue: ${error}`});
         });
 };
