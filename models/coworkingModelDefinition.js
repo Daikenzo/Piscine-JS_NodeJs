@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) =>{
             }
         },
         unique: {
+            // Error.name => SequelizeUniqueConstraintError
             msg: 'Le nom est déjà pris'
         }
     },

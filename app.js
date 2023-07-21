@@ -14,9 +14,12 @@ sequelize.initDb();
 app.use(express.json());
 app.use(morgan('dev'));
 
-//Call Routes modules
+// Init Routes
 const coworkingRooter = require('./routes/coworkingRoutes');
+const userRouter = require('./routes/usersRoutes')
+//Call Routes modules
 app.use('/api/coworkings',coworkingRooter);
+app.use('/api/users', userRouter);
 
 //Listen
 app.listen(port, () =>{

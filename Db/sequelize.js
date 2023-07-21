@@ -1,6 +1,7 @@
 // Sequelize Init
 const { Sequelize, DataTypes } = require('sequelize');
 const mockCoworkings = require('./mock-coworkings');
+const mockUsers = require('./mock-users');
 
 // Connect & Authificate DataBase
 const sequelize = new Sequelize('coworking_07_2023', 'root', '', {
@@ -16,11 +17,11 @@ sequelize.authenticate()
 // sequelize.sync()
 
 // Table define
-// const getUserModel = require('../models/userModel')
-// const UserModel = getUserModel(sequelize, DataTypes);
+const defineUsersModel = require('../models/userModelDefinition')
+const UsersModel = defineUsersModel(sequelize, DataTypes);
 
-const getCoworkingModel = require('../models/coworkingModel');
-const CoworkingModel = getCoworkingModel(sequelize, DataTypes);
+const defineCoworkingModel = require('../models/coworkingModelDefinition');
+const CoworkingModel = defineCoworkingModel(sequelize, DataTypes);
 
 // sequelize Init Insert Value
 const initDb = () =>{
@@ -44,12 +45,23 @@ const initDb = () =>{
                    "superficy":coworking.superficy,
                    "capacity":coworking.capacity,
                    "picture":coworking.picture,
-                   "created":new Date()
+                   "created":new Date(),
                })
            });
+           mockUsers.forEach(user => {
+            UsersModel.create({
+                "firstname": user.firstname,
+            "lastname": user.lastname,
+            "username": user.username? user.username : 
+                `${user.firstname} ${user.lastname}`,
+            "password": 'mdp',
+            "role":user.role,
+            "created": new Date(),
+            })
+        });
     })
 }
 
 module.exports = {
-    initDb, CoworkingModel
+    initDb, CoworkingModel, UsersModel
 }

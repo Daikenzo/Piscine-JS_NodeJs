@@ -1,5 +1,5 @@
 // Coworking Controllers
-const { InstanceError, UniqueConstraintError, ValidationError } = require('sequelize');
+const { UniqueConstraintError, ValidationError } = require('sequelize');
 const {CoworkingModel} = require('../db/sequelize');
 
 exports.findAllCoworkings = (req, res) => {
@@ -100,7 +100,6 @@ exports.createCoworking = (req, res) =>{
                 data: coworking }); // coworking => result
         })
         .catch((error) => {
-            
             if (error.name === "SequelizeUniqueConstraintError" || error instanceof UniqueConstraintError){
                 //console.log(error.name)
                 return res.status(400).json({ message: `Le nom est déjà pris`, type:error.name})
@@ -123,7 +122,7 @@ exports.updateCoworking = (req, res) =>{
             if(!result){
                 throw new Error(`le coworking N°${req.params.id} n'existe pas.`)
             } else{
-                result
+                return result
                     .update(req.body)
                     .then(() =>{
                         res.json({message: 
@@ -153,7 +152,7 @@ exports.deleteCoworking = (req, res) =>{
                     `Le coworking N°${req.params.id} n'existe pas ou a déjà été supprimé`
                 });
             } else{
-                result
+                return result
                     .destroy({
                         where:{
                             id: req.params.id
