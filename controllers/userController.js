@@ -1,5 +1,5 @@
 // Users Controllers
-const { InstanceError, UniqueConstraintError, ValidationError } = require('sequelize');
+const { UniqueConstraintError, ValidationError } = require('sequelize');
 const bcrypt = require('bcrypt');
 
 const {UserModel} = require('../db/sequelize')
@@ -40,43 +40,7 @@ exports.findUserByPk = (req, res)=>{
                 `Une erreur est survenue: ${error}`})
         });
 }
-// Create Object
-exports.createUser = (req, res) =>{
-    //Init bcrypt Hash
-    bcrypt.hash(req.body.password, 10)
-        .then(hash =>{
-            // Store & Inser Body Request Data
-            const dataUser = {...req.body, password: hash};
-            console.log(dataUser)
-            return UserModel
-                .create(
-                    dataUser
-                )
-                .then(user =>{
-                    res.status(201).json({ message: 
-                        `l'utilisateur ${user.username} a été créé.`,
-                        data:user}); // coworking => result
-                })
-        })
-        .catch(error =>{
-            const cleanMessage = error.message.split(': ')[1]
-            if (error.name === "SequelizeUniqueConstraintError" || error instanceof UniqueConstraintError){
-                const messageRescue = 
-                `${error.name}: Le nom est déjà pris.`;
-                //console.log(error.name)
-                if (error.message === "Validation error"){
-                    return res.status(400).json({ message: messageRescue})}
-                } else{
-                    return res.status(400).json({ message: `${error.message}`})
-                }
-            if ( error instanceof ValidationError) {
-                return res.status(400).json({ message: error.message })
-            } 
-            res.status(500).json({ message: 
-                `${error}`})
-        });
-            
-}
+
 // Update Object
 exports.updateUser = (req, res) =>{
     // Check Id Object
