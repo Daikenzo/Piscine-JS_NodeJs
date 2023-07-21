@@ -1,12 +1,12 @@
 // Users Controllers
 const { InstanceError, UniqueConstraintError, ValidationError } = require('sequelize');
-const {UsersModel} = require('../db/sequelize')
+const {UserModel} = require('../db/sequelize')
 
 // Controllers Defenitions
 
 // Find all Table
 exports.findAllUsers = (req, res) => {
-    UsersModel
+    UserModel
         .findAll()
         .then(result =>{
             res.json({ message: 
@@ -21,7 +21,7 @@ exports.findAllUsers = (req, res) => {
 }
 // Fin Item Table
 exports.findUserByPk = (req, res)=>{
-    UsersModel
+    UserModel
         .findByPk(req.params.id)
         .then(result =>{
             if(!result){
@@ -42,11 +42,10 @@ exports.findUserByPk = (req, res)=>{
 exports.createUser = (req, res) =>{
     // Store & Inser Body Request Data
     const newUser = {...req.body };
-
-    UsersModel
+    console.log(newUser)
+    UserModel
         .create({
-            "firstname":req.body.firstname,
-            "lastname":req.bodylastname,
+            "username":req.body.username,
             "password": req.body.password,
         })
         .then(user =>{
@@ -69,7 +68,7 @@ exports.createUser = (req, res) =>{
 // Update Object
 exports.updateUser = (req, res) =>{
     // Check Id Object
-    UsersModel
+    UserModel
         .findByPk(req.params.id)
         .then(result =>{
 
@@ -82,7 +81,7 @@ exports.updateUser = (req, res) =>{
 // Delete Object
 exports.deleteUser = (req, res) =>{
     // Check Id
-    UsersModel
+    UserModel
         .findByPk(req.params.id)
         .then(result =>{
 

@@ -17,8 +17,8 @@ sequelize.authenticate()
 // sequelize.sync()
 
 // Table define
-const defineUsersModel = require('../models/userModelDefinition')
-const UsersModel = defineUsersModel(sequelize, DataTypes);
+const defineUserModel = require('../models/userModelDefinition')
+const UserModel = defineUserModel(sequelize, DataTypes);
 
 const defineCoworkingModel = require('../models/coworkingModelDefinition');
 const CoworkingModel = defineCoworkingModel(sequelize, DataTypes);
@@ -47,21 +47,19 @@ const initDb = () =>{
                    "picture":coworking.picture,
                    "created":new Date(),
                })
-           });
-           mockUsers.forEach(user => {
-            UsersModel.create({
-                "firstname": user.firstname,
-            "lastname": user.lastname,
-            "username": user.username? user.username : 
-                `${user.firstname} ${user.lastname}`,
-            "password": 'mdp',
-            "role":user.role,
-            "created": new Date(),
             })
-        });
-    })
+            mockUsers.forEach(user => {
+                UserModel.create({
+                    firstname:user.firstname,
+                    lastname:user.lastname,
+                    username:user.username? user.username : 
+                    `${user.firstname} ${user.lastname}`,
+                    password:user.password
+                })
+            });
+        })
 }
 
 module.exports = {
-    initDb, CoworkingModel, UsersModel
+    initDb, CoworkingModel, UserModel
 }

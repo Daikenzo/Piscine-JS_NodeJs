@@ -8,37 +8,17 @@ module.exports = (sequelize, DataTypes) =>{
             autoIncrement:  true
         },
         firstname: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                    msg: 'Le nom ne peut pas être vide'
-                }
-            },
+            type: DataTypes.STRING
         },
         lastname: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                    msg: 'Le nom ne peut pas être vide'
-                }
-            },
+            type: DataTypes.STRING
         },
         username: {
             type: DataTypes.STRING,
-        },
-        birthday: {
-            type: DataTypes.DATEONLY,
-            defaultValue: new Date(Date.UTC(1990,0,1)),
+            
         },
         password: {
             type: DataTypes.STRING,
-        },
-        role:{
-            type: DataTypes.STRING,
-            defaultValue: "user",
-            allowNull:false,
-        },
+        }
     });
 }

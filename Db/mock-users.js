@@ -1,29 +1,22 @@
+const { DATE } = require("sequelize");
+
 const users =[
     {
-        "firstname":"Jane",
+        "firstname":"jane",
         "lastname":"Doe",
-        "birthday": null,
         "password":"myWord",
-        "role":"user",
-        "created": new Date()
     },
     {
+        "firstname":"Rémi",
+        "lastname": "Doami",
         "username":"Van33",
-        "firstname":"Remi",
-        "lastname":"Doami",
-        "birthday": "2022-01-17",
         "password":"psw",
-        "role":"admin",
-        "created": new Date()
     },
     {
-        "username":"Jean Dupond",
         "firstname":"Jean",
         "lastname":"Dupond",
-        "birthday": null,
+        "username":"Jean Dupond",
         "password":"psw",
-        "role":"user",
-        "created": new Date()
     },
 ]
 

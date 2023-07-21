@@ -16,7 +16,7 @@ app.use(morgan('dev'));
 
 // Init Routes
 const coworkingRooter = require('./routes/coworkingRoutes');
-const userRouter = require('./routes/usersRoutes')
+const userRouter = require('./routes/userRoutes')
 //Call Routes modules
 app.use('/api/coworkings',coworkingRooter);
 app.use('/api/users', userRouter);
