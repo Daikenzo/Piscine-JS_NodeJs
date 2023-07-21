@@ -87,13 +87,7 @@ exports.createCoworking = (req, res) =>{
     const newCoworking = {...req.body };
     // Insert Req body
      CoworkingModel
-        .create({
-            "name":newCoworking.name,
-            "price":newCoworking.price,
-            "address":newCoworking.address,
-            "superficy":newCoworking.superficy,
-            "capacity":newCoworking.capacity,
-            })
+        .create(newCoworking)
         .then((coworking) =>{
             res.status(201).json({ message: 
                 `Un nouveau coworking N°${coworking.id}: ${coworking.name}} a été créé.`,

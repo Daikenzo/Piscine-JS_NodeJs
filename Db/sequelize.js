@@ -2,6 +2,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const mockCoworkings = require('./mock-coworkings');
 const mockUsers = require('./mock-users');
+const bcrypt = require('bcrypt');
 
 // Connect & Authificate DataBase
 const sequelize = new Sequelize('coworking_07_2023', 'root', '', {
@@ -49,13 +50,18 @@ const initDb = () =>{
                })
             })
             mockUsers.forEach(user => {
-                UserModel.create({
-                    firstname:user.firstname,
-                    lastname:user.lastname,
-                    username:user.username? user.username : 
-                    `${user.firstname} ${user.lastname}`,
-                    password:user.password
-                })
+                // Hash Password
+                bcrypt.hash(user.password, 10)
+                    .then(hash =>{
+                        // Store & Inser Body Request Data
+                        return UserModel.create({
+                            firstname:user.firstname,
+                            lastname:user.lastname,
+                            username:user.username? user.username : 
+                            `${user.firstname} ${user.lastname}`,
+                            password:hash
+                        })
+                    })
             });
         })
 }
