@@ -47,17 +47,18 @@ exports.findAllCoworkingsWithRaw = (req, res) => {
     sequelize.query(
         "SELECT name, rating FROM `coworkings` LEFT JOIN `reviews` ON `coworkings`.`id` = `reviews`.`coworkingid`",
          {type: QueryTypes.SELECT})
-    .then((result)=>{
-        res.json({ message: 
+        .then((result)=>{
+            res.json({ message: 
             'La liste des coworkings a bien été récupérée.',
              data: result
             });
-    })
-    .catch((error)=>{
+        })
+        .catch((error)=>{
         res.status(500).json({ message: 
             `Une Erreur est survenue: ${error}`
             });
-    });
+        }
+    );
 };
 
 exports.findCoworkingByPk = (req, res)=>{
