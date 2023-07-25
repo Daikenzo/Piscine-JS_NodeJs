@@ -28,12 +28,13 @@ const defineReviewModel = require('../models/reviewModelDefinition');
 const RoleModel = defineRoleModel(sequelize, DataTypes);
 const UserModel = defineUserModel(sequelize, DataTypes);
 const CoworkingModel = defineCoworkingModel(sequelize, DataTypes);
+        // table Review
 const ReviewModel = defineReviewModel(sequelize, DataTypes)
 
 // Table Foreign Key Link between us
     // User & Role Model
 RoleModel.hasMany(UserModel); // join right role model user model
-UserModel.belongsTo(RoleModel) // join left role model user model
+UserModel.belongsTo(RoleModel) // join left role model user model => 
     // User & Review
 UserModel.hasMany(ReviewModel, {
     foreignKey: {

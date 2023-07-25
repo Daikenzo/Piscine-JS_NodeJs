@@ -16,10 +16,18 @@ app.use(morgan('dev'));
 
 // Init Routes
 const coworkingRooter = require('./routes/coworkingRoutes');
-const userRouter = require('./routes/userRoutes')
+const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 //Call Routes modules
 app.use('/api/coworkings',coworkingRooter);
 app.use('/api/users', userRouter);
+app.use('/api/reviews', reviewRouter);
+
+// Default request : 
+app.use((req, res) =>{
+    // If bad Resquest, return this Middleware
+    res.status(404).json({ message: `L'url demandé n'existe pas`})
+});
 
 //Listen
 app.listen(port, () =>{

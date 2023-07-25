@@ -29,10 +29,12 @@ module.exports = (CoworkingModel, UserModel, RoleModel, ReviewModel) => {
         Promise.all(rolePromises).then(() => {
             //set User Role ID
             const userPromises = []
+            let role
             userPromises.push(
+                // Define RoleId into User (value => label)
                 RoleModel.findOne({ where: { label: 'editor' } })
                     .then(role => {
-                        // Select All user with role id Editor
+                        // Import all mockUsers with this label
                             return mockUsers.filter(user =>{
                                 return user.role == role.id
                             }).forEach(user =>{
@@ -49,7 +51,8 @@ module.exports = (CoworkingModel, UserModel, RoleModel, ReviewModel) => {
                                     });
                                 });
                             });
-                }),
+                    },
+                ),
                 RoleModel.findOne({ where: { label: 'admin' } })
                     .then(role => {
                         // Select All user with role id
@@ -105,21 +108,26 @@ module.exports = (CoworkingModel, UserModel, RoleModel, ReviewModel) => {
                     }),*/
             )
             // review Generator
+            Promise.all(userPromises).then(() =>{
+                
+            })
+            
             Promise.all(userPromises)
-                .then(() => {
-                    ReviewModel.create({
-                        content: 'Lorem Ipsum',
-                        rating: 3,
-                        UserId: 1,
-                        CoworkingId: 10
-                    })
-                    ReviewModel.create({
-                        content: 'Dolor sit amet',
-                        rating: 5,
-                        UserId: 2,
-                        CoworkingId: 7
-                    })
+            .then(() => {
+                console.log(userPromises);
+                ReviewModel.create({
+                    content: 'Lorem Ipsum',
+                    rating: 3,
+                    UserId: 1,
+                    CoworkingId: 10
                 })
+                ReviewModel.create({
+                    content: 'Dolor sit amet',
+                    rating: 5,
+                    UserId: 2,
+                    CoworkingId: 7
+                })
+            })
         })
     })
 }
