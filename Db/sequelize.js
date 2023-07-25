@@ -1,8 +1,8 @@
 // Sequelize Init
 const { Sequelize, DataTypes } = require('sequelize');
-const mockCoworkings = require('./mock-coworkings');
-const mockUsers = require('./mock-users');
-const bcrypt = require('bcrypt');
+let setDataSample = require('./setDataSample')
+// Switch for debug Only
+setDataSample = require('./setDataSample_Prof');
 
 // Connect & Authificate DataBase
 const sequelize = new Sequelize('coworking_07_2023', 'root', '', {
@@ -10,6 +10,8 @@ const sequelize = new Sequelize('coworking_07_2023', 'root', '', {
     dialect: 'mariadb',
     logging: false
 });
+
+// Authenticate & Connect Database
 sequelize.authenticate()
     .then(() => console.log(
         'La connexion à la base de données a bien été établie.'))
@@ -18,11 +20,35 @@ sequelize.authenticate()
 // sequelize.sync()
 
 // Table define
-const defineUserModel = require('../models/userModelDefinition')
-const UserModel = defineUserModel(sequelize, DataTypes);
-
 const defineCoworkingModel = require('../models/coworkingModelDefinition');
+const defineRoleModel = require('../models/userRoleModelDefenition');
+const defineUserModel = require('../models/userModelDefinition');
+const defineReviewModel = require('../models/reviewModelDefinition');
+// Table Set
+const RoleModel = defineRoleModel(sequelize, DataTypes);
+const UserModel = defineUserModel(sequelize, DataTypes);
 const CoworkingModel = defineCoworkingModel(sequelize, DataTypes);
+const ReviewModel = defineReviewModel(sequelize, DataTypes)
+
+// Table Foreign Key Link between us
+    // User & Role Model
+RoleModel.hasMany(UserModel); // join right role model user model
+UserModel.belongsTo(RoleModel) // join left role model user model
+    // User & Review
+UserModel.hasMany(ReviewModel, {
+    foreignKey: {
+        allowNull: false
+    }
+});
+ReviewModel.belongsTo(UserModel);
+    // Review & Coworking
+CoworkingModel.hasMany(ReviewModel, {
+    foreignKey: {
+        allowNull: false
+    }
+});
+ReviewModel.belongsTo(CoworkingModel);
+
 
 // sequelize Init Insert Value
 const initDb = () =>{
@@ -38,34 +64,11 @@ const initDb = () =>{
     sequelize //Coworking
         .sync({ force: true})
         .then(() =>{
-           mockCoworkings.forEach(coworking => {
-               CoworkingModel.create({
-                   "name":coworking.name,
-                   "price":coworking.price,
-                   "address":coworking.address,
-                   "superficy":coworking.superficy,
-                   "capacity":coworking.capacity,
-                   "picture":coworking.picture,
-                   "created":new Date(),
-               })
-            })
-            mockUsers.forEach(user => {
-                // Hash Password
-                bcrypt.hash(user.password, 10)
-                    .then(hash =>{
-                        // Store & Inser Body Request Data
-                        return UserModel.create({
-                            firstname:user.firstname,
-                            lastname:user.lastname,
-                            username:user.username? user.username : 
-                            `${user.firstname} ${user.lastname}`,
-                            password:hash
-                        })
-                    })
-            });
-        })
-}
-
+            // Set Sample data
+            setDataSample(CoworkingModel, UserModel, RoleModel, ReviewModel);
+        });
+};
+// Export Variables and functions
 module.exports = {
-    initDb, CoworkingModel, UserModel
-}
+    initDb, CoworkingModel, UserModel, RoleModel, ReviewModel
+};

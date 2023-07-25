@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) =>{
         },
         firstname: {
             type: DataTypes.STRING,
-            allowNull:false,
+            // allowNull:false,
             validate:{
                 notEmpty:{
                     msg: "Le Prénom n'a pas été rentré."
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) =>{
         },
         lastname: {
             type: DataTypes.STRING,
-            allowNull:false,
+            // allowNull:false,
             validate:{
                 notEmpty:{
                     msg: "Le nom n'a pas été rentré."

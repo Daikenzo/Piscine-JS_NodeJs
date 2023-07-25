@@ -1,9 +1,19 @@
 // Authentificator Controllers
 const { UniqueConstraintError, ValidationError } = require('sequelize');
 const bcrypt = require('bcrypt');
-const {UserModel} = require('../db/sequelize')
+const {UserModel, RoleModel} = require('../db/sequelize')
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'clé_secrete';
+const test = true;
+
+// role Hiearchy
+// permet de préciser les éléments que peuvent touché 
+const rolesHierarchy = {
+    user: ["user"],
+    editor: ["user", "editor"],
+    admin: ["user", "editor", "admin"]
+}
+
 
 // Create Object
 exports.signUp = (req, res) =>{
@@ -43,24 +53,84 @@ exports.signUp = (req, res) =>{
 }
 // Sign In
 exports.login = (req, res) => {
-    const token = jwt.sign({
-        data:'foobar'
-    }, SECRET_KEY, {expiresIn: 60 * 60})
-    res.json({ message: 'route du Login succeful', data:token })
+    // Check Correct Login
+    console.log("check login")
+    UserModel.findOne({ where: { username: req.body.username } })
+        .then(user => {
+            const messageerror = `L'utilisateur ou le mot de passe est incorrect`;
+            console.log("Info request:", req.body)
+            // Compare Password User with request Body
+             if(!user){
+                return res.status(404).json({message: messageerror});
+             }
+            bcrypt.compare(req.body.password, user.password)
+                .then(isValid => {
+                    if (isValid) {
+                        const token = jwt.sign({
+                            data: req.body.username
+                        }, SECRET_KEY, { expiresIn: 60 * 60 });
+                        console.log(token) // Demo
+                        res.json({ message: 'login réussi', data: token })
+                    } else {
+                        return res.status(404).json({ message: messageerror })
+                    }
+                })
+        })
+        .catch(error => {
+            console.log(error)
+            return res.status(500).json( {username : error.message})
+        })
 }
 // User Acess Protect
 exports.protect = (req, res, next)=>{
-    const token = req.headers.authorization.split(' ')[1];
-    if (token){
-        console.log(token)
-        const decoded = jwt.verify(token, SECRET_KEY); //token, clé secrete
-        res.json(decoded);
-        next()
+    // Check auth User
+    if (!req.headers.authorization) {
+        return res.status(401).json({ 
+            message: `Vous n'êtes pas authentifié` })
     }
-    console.log(req.headers.authorization)
-    if(req.headers.authorization){
-        next()
-    }{
-        return res.status(401).json({message:`Vous avez pas l'autorization d'accéder`});
+    // Check Valid Token
+    const token = req.headers.authorization.split(' ')[1]
+    if (token) {
+        try {
+            // Decode and Send Token
+            const decoded = jwt.verify(token, SECRET_KEY)
+            req.username = decoded.data
+            next()
+        } catch (error) {
+            res.status(403).json({ message: `Le jeton n'est pas valide` })
+        }
+    } else {
+        res.status(401).json({ message: `Vous n'êtes pas authentifié.` })
     }
 }
+
+// Restric controller
+exports.restrictTo = (roleParam) =>{
+    return (req, res, next) =>{
+        return UserModel.findOne({where: {username: req.username}})
+            .then(user =>{
+                console.log(user)
+                // Check role & acess restrict
+                return RoleModel.findByPk(user.RoleId)
+                    .then(role =>{
+                        //Old
+                        // if(role.label === roleParam){
+                        if (rolesHierarchy[role.label].includes(roleParam)){
+                            return next()
+                        }
+                        else{
+                            return res.status(403).json({
+                                message: `Vous avez pas les droits suffisants pour cette requette.`
+                            })
+                        }
+                    })
+            })
+            .catch(error => {
+                return res.status(500).json({ message: error.message })
+            })
+    }
+};
+
+
+
+// On passe bien par le restricto avec le parametre : 

@@ -12,7 +12,7 @@ router
 router
     .route('/:id')
     .get(userController.findUserByPk)
-    .put(userController.updateUser)
+    .put(authController.protect, userController.updateUser)
     .delete(authController.protect, userController.deleteUser)
 
 // Authentificate Route
