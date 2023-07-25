@@ -130,7 +130,33 @@ exports.restrictTo = (roleParam) =>{
             })
     }
 };
-
+exports.restrictToOwner = (modelParam) =>{
+    return (req, res, next) =>{
+        // Check RoleUser
+        console.log(roleParam.UserId)
+        return modelParam.findByPk(req.params.id)
+            .then(result =>{
+                if (!result){
+                    const message = `La ressource n°${req.params.id} n'existe pas`
+                    return res.status(404).json({message});
+                }
+                return UserModel.findOne([where:{username:req.username}])
+                    .then(user =>{
+                        if (result.UserId !== user.id){
+                            
+                        }
+                    })
+                else{
+                    return res.status(403).json({
+                        message: `Vous avez pas les droits suffisants pour cette requette.`
+                    })
+                }
+            })
+            .catch(error => {
+                return res.status(500).json({ message: error.message })
+            })
+    }
+};
 
 
 // On passe bien par le restricto avec le parametre : 

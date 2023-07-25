@@ -71,5 +71,5 @@ const initDb = () =>{
 };
 // Export Variables and functions
 module.exports = {
-    initDb, CoworkingModel, UserModel, RoleModel, ReviewModel
+    initDb, CoworkingModel, UserModel, RoleModel, ReviewModel, sequelize
 };

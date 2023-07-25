@@ -42,7 +42,13 @@ module.exports = (sequelize, DataTypes) =>{
             }            
         },
         password: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING 
         }
-    });
+    }, {
+        scopes:{
+            withoutPassword:{
+                attributes: { exclude: ['password']}
+            }
+        }
+    })
 }

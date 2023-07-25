@@ -1,6 +1,8 @@
 // Coworking Controllers
-const { UniqueConstraintError, ValidationError } = require('sequelize');
-const {CoworkingModel} = require('../db/sequelize');
+const { UniqueConstraintError, ValidationError, QueryTypes } = require('sequelize');
+const {CoworkingModel, ReviewModel, sequelize} = require('../db/sequelize');
+const { query } = require('express');
+
 
 exports.findAllCoworkings = (req, res) => {
     const criterium = req.query.criterium ? req.query.criterium : 'superficy'
@@ -8,7 +10,7 @@ exports.findAllCoworkings = (req, res) => {
     const nosort = req.query.nosort
     // Init Table Request
    CoworkingModel
-    .findAll()
+    .findAll({include: ReviewModel})
     .then((result)=>{
         res.json({ message: 
             'La liste des coworkings a bien été récupérée.',
@@ -36,6 +38,26 @@ exports.findAllCoworkings = (req, res) => {
           data: arrToSort
          })
          */
+};
+
+exports.findAllCoworkingsWithRaw = (req, res) => {
+    // Init Table Request
+   CoworkingModel
+    // .findAll({include: ReviewModel})
+    sequelize.query(
+        "SELECT name, rating FROM `coworkings` LEFT JOIN `reviews` ON `coworkings`.`id` = `reviews`.`coworkingid`",
+         {type: QueryTypes.SELECT})
+    .then((result)=>{
+        res.json({ message: 
+            'La liste des coworkings a bien été récupérée.',
+             data: result
+            });
+    })
+    .catch((error)=>{
+        res.status(500).json({ message: 
+            `Une Erreur est survenue: ${error}`
+            });
+    });
 };
 
 exports.findCoworkingByPk = (req, res)=>{
