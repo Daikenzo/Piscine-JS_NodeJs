@@ -45,6 +45,9 @@ module.exports = (sequelize, DataTypes) =>{
             
         }
     },
+    picture:{
+        type:DataTypes.STRING,
+    },
     address:{
         type: DataTypes.JSON,
     },

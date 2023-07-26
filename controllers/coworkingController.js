@@ -130,6 +130,30 @@ exports.createCoworking = (req, res) =>{
     
 }
 
+// Creation d'un coworking avec image
+exports.createCoworkingWithImage = (req, res) => {
+    const newCoworking = JSON.parse(req.body.data);
+    CoworkingModel
+        .create({
+            name: newCoworking.name,
+            price: newCoworking.price,
+            superficy: newCoworking.superficy,
+            capacity: newCoworking.capacity,
+            address: newCoworking.address,
+            UserId: newCoworking.UserId,
+            picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        })
+        .then((result) => {
+            res.status(201).json({ message: 'Un coworking a bien été ajouté.', data: result })
+        })
+        .catch((error) => {
+            if (error instanceof UniqueConstraintError || error instanceof ValidationError) {
+                return res.status(400).json({ message: error.message })
+            }
+            res.status(500).json({ message: `Une erreur est survenue :  ${error}` })
+        })
+}
+
 exports.updateCoworking = (req, res) =>{
     // Check Id Object
     CoworkingModel
@@ -187,3 +211,40 @@ exports.deleteCoworking = (req, res) =>{
                 `Une erreur est survenue: ${error}`});
         });
 };
+
+// Find all Coworking By Review (with ratings)
+exports.findAllCoworkingsByReview = (req, res) => {
+    const minRate = req.query.minRate || 4
+    CoworkingModel.findAll({
+        include: {
+            model: ReviewModel,
+            where: {
+                rating: { [Op.gte]: 4 }
+            }
+        }
+    })
+        .then((elements) => {
+            const msg = 'La liste des coworkings a bien été récupérée en base de données.'
+            res.json({ message: msg, data: elements })
+        })
+        .catch((error) => {
+            const msg = 'Une erreur est survenue.'
+            res.status(500).json({ message: msg })
+        })
+}
+
+exports.findAllCoworkingsByReviewSQL = (req, res) => {
+    return sequelize.query('SELECT name, rating FROM `coworkings` LEFT JOIN `reviews` ON `coworkings`.`id` = `reviews`.`coworkingId`',
+        {
+            type: QueryTypes.SELECT
+        }
+    )
+        .then(coworkings => {
+            const message = `Il y a ${coworkings.length} coworkings comme résultat de la requête en SQL pur.`
+            res.json({ message, data: coworkings })
+        })
+        .catch(error => {
+            const message = `La liste des coworkings n'a pas pu se charger. Reessayez ulterieurement.`
+            res.status(500).json({ message, data: error })
+        })
+}

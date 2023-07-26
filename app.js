@@ -4,6 +4,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const sequelize = require('./db/sequelize');
+// Librairie Node permettant de gérer les adresses liens sources
+const path = require('path')
 const app = express();
 const port = 3000;
 
@@ -14,6 +16,7 @@ sequelize.initDb();
 app.use(express.json());
 app.use(morgan('dev'));
 
+
 // Init Routes
 const coworkingRooter = require('./routes/coworkingRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -22,6 +25,9 @@ const reviewRouter = require('./routes/reviewRoutes');
 app.use('/api/coworkings',coworkingRooter);
 app.use('/api/users', userRouter);
 app.use('/api/reviews', reviewRouter);
+
+// utilisation de path & gestion du dossier à l'adresse /images
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Default request : 
 app.use((req, res) =>{
