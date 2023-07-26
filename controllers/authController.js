@@ -109,7 +109,7 @@ exports.restrictTo = (roleParam) =>{
     return (req, res, next) =>{
         return UserModel.findOne({where: {username: req.username}})
             .then(user =>{
-                console.log(user)
+                console.log(user, roleParam)
                 // Check role & acess restrict
                 return RoleModel.findByPk(user.RoleId)
                     .then(role =>{
@@ -133,7 +133,6 @@ exports.restrictTo = (roleParam) =>{
 exports.restrictToOwnerUser = (modelParam) =>{
     return (req, res, next) =>{
         // Check RoleUser
-        console.log(roleParam.UserId)
         return modelParam.findByPk(req.params.id)
             .then(result =>{
                 if (!result){
