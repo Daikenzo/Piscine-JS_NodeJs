@@ -16,7 +16,7 @@ exports.findAllReviews = (req, res) => {
 exports.createReview = (req, res) => {
     UserModel.findOne({ where: { username: req.username } })
         .then(user => {
-            return ReviewModel.create({ ...req.body, UserId: user.id, CoworkingId: req.params.coworkingId })
+            return ReviewModel.create({ ...req.body, UserId: user.id, id: req.params.id })
                 .then(result => {
                     res.json({ message: `création d'un avis`, data: result })
                 })
@@ -27,3 +27,26 @@ exports.createReview = (req, res) => {
 
 
 } 
+// Review UPDATE
+exports.updateReview = (req, res) => {
+    ReviewModel
+        .findByPk(req.params.id)
+        .then(result => {
+            if (!result) {
+                //throw new Error('Aucun coworking trouvé')
+                res.status(404).json({ message: 'Aucun avis trouvé' })
+            } else {
+                return result
+                    .update(req.body)
+                    .then(() => {
+                        res.json({ message: `Avis modifié : ${result.dataValues.id} `, data: result })
+                    })
+            }
+        })
+        .catch(error => {
+            if (error instanceof ValidationError) {
+                return res.status(400).json({ message: error.message })
+            }
+            res.status(500).json({ message: error.message })
+        })
+}

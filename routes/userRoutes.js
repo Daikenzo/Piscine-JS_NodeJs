@@ -13,7 +13,9 @@ router
     .route('/:id')
     .get(userController.findUserByPk)
     .put(authController.protect, userController.updateUser)
-    .delete(authController.protect, userController.deleteUser)
+    .delete(authController.protect, 
+        authController.restrictTo("admin"),
+        userController.deleteUser)
 
 // Authentificate Route
 router

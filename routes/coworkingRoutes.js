@@ -20,10 +20,10 @@ router
     .route('/:id')
     .get(coworkingController.findCoworkingByPk)
     .put(authController.protect, 
-        authController.restrictToOwner(CoworkingModel), 
+        authController.restrictToOwnerUser(CoworkingModel), 
         coworkingController.updateCoworking)
     .delete(authController.protect, 
-        authController.restrictToOwner(CoworkingModel), 
+        authController.restrictToOwnerUser(CoworkingModel), 
         coworkingController.deleteCoworking)
 
 // Export

@@ -130,7 +130,7 @@ exports.restrictTo = (roleParam) =>{
             })
     }
 };
-exports.restrictToOwner = (modelParam) =>{
+exports.restrictToOwnerUser = (modelParam) =>{
     return (req, res, next) =>{
         // Check RoleUser
         console.log(roleParam.UserId)
@@ -140,17 +140,14 @@ exports.restrictToOwner = (modelParam) =>{
                     const message = `La ressource n°${req.params.id} n'existe pas`
                     return res.status(404).json({message});
                 }
-                return UserModel.findOne([where:{username:req.username}])
-                    .then(user =>{
-                        if (result.UserId !== user.id){
-                            
+                return UserModel.findOne({ where: { username: req.username } })
+                    .then(user => {
+                        if (result.UserId !== user.id) {
+                            const message = "Tu n'es pas le créateur de cette ressource";
+                            return res.status(403).json({ message })
                         }
+                        return next();
                     })
-                else{
-                    return res.status(403).json({
-                        message: `Vous avez pas les droits suffisants pour cette requette.`
-                    })
-                }
             })
             .catch(error => {
                 return res.status(500).json({ message: error.message })
