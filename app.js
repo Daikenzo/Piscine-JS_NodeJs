@@ -3,6 +3,7 @@
 // Main Const & Define
 const express = require('express');
 const morgan = require('morgan');
+var cors = require('cors')
 const sequelize = require('./db/sequelize');
 // Librairie Node permettant de gérer les adresses liens sources
 const path = require('path')
@@ -15,6 +16,7 @@ sequelize.initDb();
 // Call app
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cors());
 
 
 // Init Routes
