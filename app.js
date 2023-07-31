@@ -7,7 +7,7 @@ const sequelize = require('./db/sequelize');
 // Librairie Node permettant de gérer les adresses liens sources
 const path = require('path')
 const app = express();
-const port = 3000;
+const port = 3001; // par défaut, les api sont au port 8000
 
 // sequelize Init
 sequelize.initDb();
