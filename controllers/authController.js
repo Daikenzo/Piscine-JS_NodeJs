@@ -94,6 +94,7 @@ exports.protect = (req, res, next)=>{
         try {
             // Decode and Send Token
             const decoded = jwt.verify(token, SECRET_KEY)
+            console.log(req.username); // Undefined
             req.username = decoded.data
             next()
         } catch (error) {
@@ -107,6 +108,7 @@ exports.protect = (req, res, next)=>{
 // Restric controller
 exports.restrictTo = (roleParam) =>{
     return (req, res, next) =>{
+        console.log(req)
         return UserModel.findOne({where: {username: req.username}})
             .then(user =>{
                 console.log(user, roleParam)

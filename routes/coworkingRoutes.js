@@ -10,15 +10,18 @@ const multer = require('../middleware/multer-config');
 router
     .route('/')
     .get(coworkingController.findAllCoworkings)
-    .post(authController.protect, 
+    .post(
+        authController.protect, 
         authController.restrictTo("editor"), 
         coworkingController.createCoworking)
 
 router
     .route('/withImg')
-    .post(authController.protect, 
+    .post(
+        authController.protect, 
         authController.restrictTo("editor"), 
-        multer, coworkingController.createCoworkingWithImage)
+        multer, 
+        coworkingController.createCoworkingWithImage)
 
 router
     .route('/withReview')
@@ -32,10 +35,12 @@ router
 router
     .route('/:id')
     .get(coworkingController.findCoworkingByPk)
-    .put(authController.protect, 
+    .put(
+        authController.protect, 
         authController.restrictToOwnerUser(CoworkingModel), 
         coworkingController.updateCoworking)
-    .delete(authController.protect, 
+    .delete(
+        authController.protect, 
         authController.restrictToOwnerUser(CoworkingModel), 
         coworkingController.deleteCoworking)
 
