@@ -69,9 +69,11 @@ exports.login = (req, res) => {
                         const token = jwt.sign({
                             data: {
                                 username: req.body.username,
-                                id: req.body.id,
-                            }
-                        }, SECRET_KEY, { expiresIn: 60 * 60 });
+                                id: user.id,
+                                role:user.RoleId
+                            },
+                        }, 
+                        SECRET_KEY, { expiresIn: 60 * 60 });
                         console.log(token) // Demo
                         res.json({ message: 'login réussi', data: token })
                     } else {
