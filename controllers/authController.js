@@ -89,18 +89,21 @@ exports.login = (req, res) => {
 // User Acess Protect
 exports.protect = (req, res, next)=>{
     // Check auth User
+    console.log('protect check', req.body) 
     if (!req.headers.authorization) {
         return res.status(401).json({ 
             message: `Vous n'êtes pas authentifié` })
     }
     // Check Valid Token
+    console.log('check token')
     const token = req.headers.authorization.split(' ')[1]
     if (token) {
+        console.log('decode protect')
         try {
             // Decode and Send Token
             const decoded = jwt.verify(token, SECRET_KEY)
-            console.log(req.username); // Undefined
-            req.username = decoded.data
+            console.log(req.data.username); // Undefined
+            req.username = decoded.data.username
             next()
         } catch (error) {
             res.status(403).json({ message: `Le jeton n'est pas valide` })
