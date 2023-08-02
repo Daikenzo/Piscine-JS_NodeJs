@@ -67,7 +67,10 @@ exports.login = (req, res) => {
                 .then(isValid => {
                     if (isValid) {
                         const token = jwt.sign({
-                            data: req.body.username
+                            data: {
+                                username: req.body.username,
+                                id: req.body.id,
+                            }
                         }, SECRET_KEY, { expiresIn: 60 * 60 });
                         console.log(token) // Demo
                         res.json({ message: 'login réussi', data: token })

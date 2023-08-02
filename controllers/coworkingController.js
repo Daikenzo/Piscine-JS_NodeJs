@@ -107,7 +107,7 @@ exports.createCoworking = (req, res) =>{
     // Insert Data object Info
     mockCoworkings.push(newCoworking)*/
     
-    const newCoworking = {...req.body, UserId: 1};
+    const newCoworking = {...req.body, UserId:1};
     console.log("coworking data queries", newCoworking)
     // Insert Req body
      CoworkingModel
