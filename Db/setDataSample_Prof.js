@@ -34,6 +34,17 @@ module.exports = (CoworkingModel, UserModel, RoleModel, ReviewModel) => {
                                 RoleId: role.id
                             })
                         })
+                }),
+            await RoleModel.findOne({ where: { label: 'user' } })
+                .then(role => {
+                    return bcrypt.hash('mdp', 10)
+                        .then(hash => {
+                            return UserModel.create({
+                                username: 'Paul',
+                                password: hash,
+                                RoleId: role.id
+                            })
+                        })
                 })
         )
         Promise.all(userPromises)
